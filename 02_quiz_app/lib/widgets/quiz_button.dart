@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/questions_screen.dart';
 
 class QuizButton extends StatelessWidget {
   const QuizButton({super.key});
@@ -6,7 +7,12 @@ class QuizButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const QuestionsScreen()),
+        );
+      },
       label: const Text(
         'Start Quiz',
         style: TextStyle(fontSize: 18),
