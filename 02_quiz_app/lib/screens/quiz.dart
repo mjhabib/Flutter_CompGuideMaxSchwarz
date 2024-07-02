@@ -14,17 +14,23 @@ class Quiz extends StatefulWidget {
 class _QuizState extends State<Quiz> {
   // to prevent 'the instance member...' error, we need to initialize the line of code below, in an initState method to ensure it only executes once
   // Widget activeScreen = StartScreen(switchScreen);
-  Widget? activeScreen;
 
-  @override
-  void initState() {
-    activeScreen = StartScreen(switchScreen);
-    super.initState();
-  }
+  // Solution #1: Using initState to switch between screens
+  // Widget? activeScreen;
+
+  // @override
+  // void initState() {
+  //   activeScreen = StartScreen(switchScreen);
+  //   super.initState();
+  // }
+
+  // Solution #2: Using ternary operators to switch between screens
+  var activeScreen = 'start-screen';
 
   void switchScreen() {
     setState(() {
-      activeScreen = const QuestionScreen();
+      // activeScreen = const QuestionScreen();
+      activeScreen = 'question-screen';
     });
   }
 
@@ -42,7 +48,9 @@ class _QuizState extends State<Quiz> {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft),
           ),
-          child: activeScreen,
+          child: activeScreen == 'start-screen'
+              ? StartScreen(switchScreen)
+              : const QuestionScreen(),
         ),
       ),
     );
