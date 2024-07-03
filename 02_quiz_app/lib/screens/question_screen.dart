@@ -4,7 +4,8 @@ import '../widgets/answer_button.dart';
 import '../data/questions.dart';
 
 class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({super.key});
+  final void Function(String answer) onSelectAnswer;
+  const QuestionScreen({super.key, required this.onSelectAnswer});
 
   @override
   State<QuestionScreen> createState() => _QuestionScreenState();
@@ -13,7 +14,9 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   var currentQuestionIndex = 0;
 
-  void answerQuestion() {
+  void answerQuestion(String selectedAnswer) {
+    // the 'widget' keyword helps us to have access to the properties of a parent class here in a child class
+    widget.onSelectAnswer(selectedAnswer);
     // currentQuestionIndex = currentQuestionIndex + 1;
     // currentQuestionIndex += 1;
     setState(() {
@@ -44,7 +47,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
             const SizedBox(height: 30),
             // Show answers dynamically using map and spread operation
             ...currentQuestion.getShuffleAnswers().map((answer) {
-              return AnswerButton(answer, answerQuestion);
+              return AnswerButton(answer, () {
+                answerQuestion(answer);
+              });
             })
 
             // Show answers manually
