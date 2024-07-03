@@ -46,7 +46,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ),
             const SizedBox(height: 30),
             // Show answers dynamically using map and spread operation
-            ...currentQuestion.getShuffleAnswers().map((answer) {
+            ...currentQuestion.shuffleAnswers.map((answer) {
               return AnswerButton(answer, () {
                 answerQuestion(answer);
               });
