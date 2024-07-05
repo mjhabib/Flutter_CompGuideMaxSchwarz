@@ -27,26 +27,37 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,
+      // make the modal full-screen so the pop-up keyboard doesn't overlap the modal
       context: context,
-      builder: (context) => const NewExpense(),
+      builder: (context) => NewExpense(onAddExpense: _addExpense),
+    );
+  }
+
+  void _addExpense(Expense expense) {
+    setState(
+      () {
+        _registeredExpenses.add(expense);
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Expense Tracker'),
-          actions: [
-            IconButton(onPressed: _openAddOverlay, icon: const Icon(Icons.add))
-          ],
-        ),
-        body: Column(
-          children: [
-            const Text('chart data'),
-            Expanded(child: ExpensesList(expenses: _registeredExpenses))
-            // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
-          ],
-        ));
+      appBar: AppBar(
+        title: const Text('Expense Tracker'),
+        actions: [
+          IconButton(onPressed: _openAddOverlay, icon: const Icon(Icons.add))
+        ],
+      ),
+      body: Column(
+        children: [
+          const Text('chart data'),
+          Expanded(child: ExpensesList(expenses: _registeredExpenses))
+          // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
+        ],
+      ),
+    );
   }
 }
