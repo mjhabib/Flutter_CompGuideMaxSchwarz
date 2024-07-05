@@ -1,5 +1,6 @@
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expenses_list.dart';
+import 'package:expense_tracker/widgets/new_expense.dart';
 
 import 'package:flutter/material.dart';
 
@@ -24,15 +25,28 @@ class _ExpensesState extends State<Expenses> {
         category: Category.leisure),
   ];
 
+  void _openAddOverlay() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => const NewExpense(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: const Text('Expense Tracker'),
+          actions: [
+            IconButton(onPressed: _openAddOverlay, icon: const Icon(Icons.add))
+          ],
+        ),
         body: Column(
-      children: [
-        const Text('chart data'),
-        Expanded(child: ExpensesList(expenses: _registeredExpenses))
-        // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
-      ],
-    ));
+          children: [
+            const Text('chart data'),
+            Expanded(child: ExpensesList(expenses: _registeredExpenses))
+            // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
+          ],
+        ));
   }
 }
