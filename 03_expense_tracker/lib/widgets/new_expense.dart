@@ -39,6 +39,36 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
+  void _submitExpenseDate() {
+    // convert the 'string amount value' to 'double' if can, if not return 'null'
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsValid = enteredAmount == null || enteredAmount <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        amountIsValid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text('Invalid input'),
+            content: const Text(
+                'Please make sure you entered a valid title/amount/date/category!'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text('Okay'))
+            ],
+          );
+        },
+      );
+      return;
+      // this return is because we don't wanna continue to execute other lines of code like storing any data, if we have any error
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -109,7 +139,7 @@ class _NewExpenseState extends State<NewExpense> {
                     setState(() {
                       _selectedCategory = value;
                     });
-                    print(value);
+                    // print(value);
                   }),
               const Spacer(),
               TextButton(
@@ -119,11 +149,12 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                  onPressed: () {
-                    print(_titleController.text);
-                    print(_amountController.text);
-                    // print(_title);
-                  },
+                  onPressed: _submitExpenseDate,
+                  // () {
+                  // print(_titleController.text);
+                  // print(_amountController.text);
+                  // print(_title);
+                  // },
                   child: const Text('Save Expense'))
             ],
           )
