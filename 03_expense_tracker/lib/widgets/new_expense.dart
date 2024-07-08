@@ -1,3 +1,5 @@
+// import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/expense.dart';
@@ -48,23 +50,42 @@ class _NewExpenseState extends State<NewExpense> {
     if (_titleController.text.trim().isEmpty ||
         amountIsValid ||
         _selectedDate == null) {
-      showDialog(
-        context: context,
-        builder: (ctx) {
-          return AlertDialog(
-            title: const Text('Invalid input'),
-            content: const Text(
-                'Please make sure you entered a valid title/amount/date/category!'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                  },
-                  child: const Text('Okay'))
-            ],
-          );
-        },
-      );
+      // show cupertino design on ios devices
+      // if (Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (ctx) => CupertinoAlertDialog(
+                title: const Text('Invalid input'),
+                content: const Text(
+                    'Please make sure you entered a valid title/amount/date/category!'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('Okay'))
+                ],
+              ));
+      // else if our platform is anything but ios
+      // } else {
+      //   showDialog(
+      //     context: context,
+      //     builder: (ctx) {
+      //       return AlertDialog(
+      //         title: const Text('Invalid input'),
+      //         content: const Text(
+      //             'Please make sure you entered a valid title/amount/date/category!'),
+      //         actions: [
+      //           TextButton(
+      //               onPressed: () {
+      //                 Navigator.pop(ctx);
+      //               },
+      //               child: const Text('Okay'))
+      //         ],
+      //       );
+      //     },
+      //   );
+      // }
       return;
       // this return is because we don't wanna continue to execute other lines of code like storing any data, if we have any error
     }
