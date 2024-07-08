@@ -1,9 +1,15 @@
 import 'package:expense_tracker/widgets/expenses.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MainApp());
+  // force the app to only works in a vertical mode not the landscape mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((fn) {
+    runApp(const MainApp());
+  });
 }
 
 var kColorScheme = ColorScheme.fromSeed(
