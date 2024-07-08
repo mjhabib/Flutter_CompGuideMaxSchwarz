@@ -87,87 +87,95 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleController,
-            // onChanged: _saveInputTitle,
-            maxLength: 50,
-            decoration: const InputDecoration(label: Text('Title')),
-          ),
-          Row(
+    // to know how much space our keyboard occupies in our app, so we can fix that if keyboard takes too much space
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+          child: Column(
             children: [
-              Expanded(
-                child: TextField(
-                  // TextField within Row will cause problem that's why we need the Expanded widget
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      label: Text('Amount'), prefixText: '\$ '),
-                ),
+              TextField(
+                controller: _titleController,
+                // onChanged: _saveInputTitle,
+                maxLength: 50,
+                decoration: const InputDecoration(label: Text('Title')),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                // Row within Row will cause problem that's why we need the Expanded widget
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(_selectedDate == null
-                        ? 'No date selected'
-                        : formatter.format(_selectedDate!)),
-                    IconButton(
-                      onPressed: _datePicker,
-                      icon: const Icon(Icons.calendar_month),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      // TextField within Row will cause problem that's why we need the Expanded widget
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          label: Text('Amount'), prefixText: '\$ '),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    // Row within Row will cause problem that's why we need the Expanded widget
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(_selectedDate == null
+                            ? 'No date selected'
+                            : formatter.format(_selectedDate!)),
+                        IconButton(
+                          onPressed: _datePicker,
+                          icon: const Icon(Icons.calendar_month),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  // we use 'map' here to to solve the error "type 'List<Category>' can't be assigned to the parameter type 'List<DropdownMenuItem<Object>>?'"
+                  DropdownButton(
+                      value: _selectedCategory,
+                      items: Category.values.map(
+                        (category) {
+                          return DropdownMenuItem(
+                            value: category,
+                            child: Text(category.name.toUpperCase()),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        }
+                        setState(() {
+                          _selectedCategory = value;
+                        });
+                        // print(value);
+                      }),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                      onPressed: _submitExpenseDate,
+                      // () {
+                      // print(_titleController.text);
+                      // print(_amountController.text);
+                      // print(_title);
+                      // },
+                      child: const Text('Save Expense'))
+                ],
+              )
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              // we use 'map' here to to solve the error "type 'List<Category>' can't be assigned to the parameter type 'List<DropdownMenuItem<Object>>?'"
-              DropdownButton(
-                  value: _selectedCategory,
-                  items: Category.values.map(
-                    (category) {
-                      return DropdownMenuItem(
-                        value: category,
-                        child: Text(category.name.toUpperCase()),
-                      );
-                    },
-                  ).toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                    // print(value);
-                  }),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                  onPressed: _submitExpenseDate,
-                  // () {
-                  // print(_titleController.text);
-                  // print(_amountController.text);
-                  // print(_title);
-                  // },
-                  child: const Text('Save Expense'))
-            ],
-          )
-        ],
+        ),
       ),
     );
   }

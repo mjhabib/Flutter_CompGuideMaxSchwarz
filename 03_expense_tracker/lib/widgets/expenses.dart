@@ -28,6 +28,8 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddOverlay() {
     showModalBottomSheet(
+      // make sure our ui does not overlap with device's features like camera, sensors, etc...
+      useSafeArea: true,
       isScrollControlled: true,
       // make the modal full-screen so the pop-up keyboard doesn't overlap the modal
       context: context,
@@ -68,6 +70,9 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    // to know if our device is in landscape mode or not, so we can change the ui to be more responsive
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
@@ -84,15 +89,24 @@ class _ExpensesState extends State<Expenses> {
           IconButton(onPressed: _openAddOverlay, icon: const Icon(Icons.add))
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-          // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+                // using a ListView inside a column cause a problem, that's why we need the 'Expanded' widget here
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
