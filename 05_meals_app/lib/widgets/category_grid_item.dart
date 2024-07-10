@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/models/category_model.dart';
 
 class CategoryGridItem extends StatelessWidget {
-  final CategoryModel category;
-  const CategoryGridItem({super.key, required this.category});
+  final CategoryModel categoryModel;
+  const CategoryGridItem({super.key, required this.categoryModel});
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +13,15 @@ class CategoryGridItem extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            category.color.withOpacity(0.5),
-            category.color.withOpacity(0.9)
+            categoryModel.color.withOpacity(0.5),
+            categoryModel.color.withOpacity(0.9)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
       child: Text(
-        category.title,
+        categoryModel.title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),

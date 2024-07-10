@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:meals_app/models/category_model.dart';
 
-const availableCategories = [
+const dummyData = [
   CategoryModel(
     id: 'c1',
     title: 'Italian',
