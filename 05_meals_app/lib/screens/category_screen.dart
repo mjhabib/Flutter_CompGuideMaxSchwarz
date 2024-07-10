@@ -20,8 +20,9 @@ class CategoryScreen extends StatelessWidget {
             crossAxisSpacing: 20,
             mainAxisSpacing: 20),
         children: [
-          //   dummyData.map((data) => CategoryGridItem(categoryModel: data)).toList()
-          for (final data in dummyData) CategoryGridItem(categoryModel: data)
+          //   dummyCategoryData.map((data) => CategoryGridItem(categoryModel: data)).toList()
+          for (final data in dummyCategoryData)
+            CategoryGridItem(categoryModel: data)
         ],
       ),
     );
