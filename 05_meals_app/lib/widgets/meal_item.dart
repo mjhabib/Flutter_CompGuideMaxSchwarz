@@ -33,7 +33,8 @@ class MealItem extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => MealDetailsScreen(
-                    mealTitle: mealModel.title, mealImage: mealModel.imageUrl)),
+                      mealModel: mealModel,
+                    )),
           );
         },
         child: Stack(
