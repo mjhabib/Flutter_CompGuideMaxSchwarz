@@ -6,12 +6,12 @@ import 'package:meals_app/models/category_model.dart';
 
 class CategoryGridItem extends StatelessWidget {
   final CategoryModel categoryModel;
-  final void Function(MealModel meal) onToggleFavorites;
+  // final void Function(MealModel meal) onToggleFavorites;
   final List<MealModel> availableMeals;
   const CategoryGridItem(
       {super.key,
       required this.categoryModel,
-      required this.onToggleFavorites,
+      // required this.onToggleFavorites,
       required this.availableMeals});
 
   @override
@@ -22,7 +22,7 @@ class CategoryGridItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => MealsScreen(
-                onToggleFavorites: onToggleFavorites,
+                // onToggleFavorites: onToggleFavorites,
                 title: categoryModel.title,
                 mealModel: availableMeals
                     .where((meal) => meal.categories.contains(categoryModel.id))

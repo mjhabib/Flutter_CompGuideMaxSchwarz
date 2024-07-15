@@ -7,9 +7,12 @@ import 'package:meals_app/models/meal_model.dart';
 
 class MealItem extends StatelessWidget {
   final MealModel mealModel;
-  final void Function(MealModel meal) onToggleFavorites;
-  const MealItem(
-      {super.key, required this.mealModel, required this.onToggleFavorites});
+  // final void Function(MealModel meal) onToggleFavorites;
+  const MealItem({
+    super.key,
+    required this.mealModel,
+    // required this.onToggleFavorites,
+  });
 
   // Uppercase the first letter using a getter then concatenate it to the rest of the string
   String get complexityText {
@@ -36,7 +39,7 @@ class MealItem extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => MealDetailsScreen(
                       mealModel: mealModel,
-                      onToggleFavorites: onToggleFavorites,
+                      // onToggleFavorites: onToggleFavorites,
                     )),
           );
         },
