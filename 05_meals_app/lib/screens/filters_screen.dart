@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:meals_app/providers/filters_notifier.dart';
 // import 'package:meals_app/screens/tabs_screen.dart';
 // import 'package:meals_app/widgets/main_drawer.dart';
 
-enum Filter { glutenFree, lactoseFree, vegetarian, vegan }
+// enum Filter { glutenFree, lactoseFree, vegetarian, vegan }
 
-class FiltersScreen extends StatefulWidget {
+class FiltersScreen extends ConsumerStatefulWidget {
   // this currentFilters variable will help us to save the status of any selected filters in filters_screen so when we push/pop to another screen, we don't lose the status of those filters
-  final Map<Filter, bool> currentFilters;
-  const FiltersScreen({super.key, required this.currentFilters});
+  // final Map<Filter, bool> currentFilters;
+  const FiltersScreen({
+    super.key,
+    // required this.currentFilters,
+  });
 
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
+  ConsumerState<FiltersScreen> createState() => _FiltersScreenState();
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   // we can't have access to the 'widget' here so we need to an initializer like 'initState' below
   var _glutenFreeFilterSet = false;
   var _lactoseFreeFilterSet = false;
@@ -24,10 +29,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeFilterSet = widget.currentFilters[Filter.glutenFree]!;
-    _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
-    _vegetarianFilterSet = widget.currentFilters[Filter.vegetarian]!;
-    _veganFilterSet = widget.currentFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersNotifier);
+    _glutenFreeFilterSet = activeFilters[Filter.glutenFree]!;
+    _lactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+    _vegetarianFilterSet = activeFilters[Filter.vegetarian]!;
+    _veganFilterSet = activeFilters[Filter.vegan]!;
+
+    //   _glutenFreeFilterSet = widget.currentFilters[Filter.glutenFree]!;
+    //   _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
+    //   _vegetarianFilterSet = widget.currentFilters[Filter.vegetarian]!;
+    //   _veganFilterSet = widget.currentFilters[Filter.vegan]!;
   }
 
   @override
@@ -48,15 +59,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
       //   }
       // }),
       body: PopScope(
-        canPop: false,
+        // canPop: false,
+        canPop: true,
         onPopInvoked: (didPop) {
-          if (didPop) return;
-          Navigator.of(context).pop({
+          if (!didPop) return;
+          // if (didPop) return;
+          ref.read(filtersNotifier.notifier).setAllFilters({
             Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
             Filter.vegan: _veganFilterSet
           });
+          // Navigator.of(context).pop({
+          // Filter.glutenFree: _glutenFreeFilterSet,
+          // Filter.lactoseFree: _lactoseFreeFilterSet,
+          // Filter.vegetarian: _vegetarianFilterSet,
+          // Filter.vegan: _veganFilterSet
+          // });
         },
         child: Column(
           children: [

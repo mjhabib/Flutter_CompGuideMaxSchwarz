@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// we imported the filters_notifier here only because our 'enum Filter' identifier
+import 'package:meals_app/providers/filters_notifier.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
 import 'package:meals_app/providers/meals_provider.dart';
 // import 'package:meals_app/models/meal_model.dart';
@@ -9,12 +11,12 @@ import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/screens/category_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
-const kInitialFilters = {
-  Filter.glutenFree: false,
-  Filter.lactoseFree: false,
-  Filter.vegetarian: false,
-  Filter.vegan: false
-};
+// const kInitialFilters = {
+//   Filter.glutenFree: false,
+//   Filter.lactoseFree: false,
+//   Filter.vegetarian: false,
+//   Filter.vegan: false
+// };
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
@@ -26,7 +28,7 @@ class TabsScreen extends ConsumerStatefulWidget {
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   // final List<MealModel> _favoriteMeals = [];
   int _selectedPageIndex = 0;
-  Map<Filter, bool> _selectedFilters = kInitialFilters;
+  // final Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   // void _showInfoMessage(String message) {
   //   ScaffoldMessenger.of(context).clearSnackBars();
@@ -60,14 +62,17 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     Navigator.pop(context);
     if (identifier == 'filters') {
       // we need to wait for the user to return so we can get the result
-      final result = await Navigator.of(context).push<Map<Filter, bool>>(
+      // final result = await...
+      await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => FiltersScreen(currentFilters: _selectedFilters),
+          builder: (ctx) => const FiltersScreen(
+              // currentFilters: _selectedFilters
+              ),
         ),
       );
-      setState(() {
-        _selectedFilters = result ?? kInitialFilters;
-      });
+      // setState(() {
+      //   _selectedFilters = result ?? kInitialFilters;
+      // });
     }
   }
 
@@ -75,18 +80,23 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   Widget build(BuildContext context) {
     // 'ref' property from riverpod is similar to the 'widget' from flutter which will allow us to listen (watch) to changes
     final meals = ref.watch(mealsProvider);
+    final activeFilters = ref.watch(filtersNotifier);
     final availableMeals = meals.where(
       (meal) {
-        if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+        if (activeFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+          // if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
           return false;
         }
-        if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+        if (activeFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+          // if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
           return false;
         }
-        if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+        if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+          // if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
           return false;
         }
-        if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+        if (activeFilters[Filter.vegan]! && !meal.isVegan) {
+          // if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
           return false;
         }
         return true;
