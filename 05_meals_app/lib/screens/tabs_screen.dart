@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // we imported the filters_notifier here only because our 'enum Filter' identifier
 import 'package:meals_app/providers/filters_notifier.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
-import 'package:meals_app/providers/meals_provider.dart';
+// import 'package:meals_app/providers/meals_provider.dart';
 // import 'package:meals_app/models/meal_model.dart';
 import 'package:meals_app/screens/filters_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
@@ -79,29 +79,9 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     // 'ref' property from riverpod is similar to the 'widget' from flutter which will allow us to listen (watch) to changes
-    final meals = ref.watch(mealsProvider);
-    final activeFilters = ref.watch(filtersNotifier);
-    final availableMeals = meals.where(
-      (meal) {
-        if (activeFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
-          // if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
-          return false;
-        }
-        if (activeFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-          // if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-          return false;
-        }
-        if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-          // if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-          return false;
-        }
-        if (activeFilters[Filter.vegan]! && !meal.isVegan) {
-          // if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
-          return false;
-        }
-        return true;
-      },
-    ).toList();
+    // final meals = ref.watch(mealsProvider);
+    // final activeFilters = ref.watch(filtersNotifier);
+    final availableMeals = ref.watch(filteredMealsProvider);
 
     Widget activePage = CategoryScreen(
       // onToggleFavorites: _toggleFavorites,
