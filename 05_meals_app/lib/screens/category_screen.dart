@@ -5,11 +5,9 @@ import 'package:meals_app/models/meal_model.dart';
 import 'package:meals_app/widgets/category_grid_item.dart';
 
 class CategoryScreen extends StatelessWidget {
-  // final void Function(MealModel meal) onToggleFavorites;
   final List<MealModel> availableMeals;
   const CategoryScreen(
       {super.key,
-      // required this.onToggleFavorites,
       required this.availableMeals});
 
   @override
@@ -22,11 +20,9 @@ class CategoryScreen extends StatelessWidget {
           crossAxisSpacing: 20,
           mainAxisSpacing: 20),
       children: [
-        //   dummyCategoryData.map((data) => CategoryGridItem(categoryModel: data)).toList()
         for (final data in dummyCategoryData)
           CategoryGridItem(
             categoryModel: data,
-            // onToggleFavorites: onToggleFavorites,
             availableMeals: availableMeals,
           )
       ],

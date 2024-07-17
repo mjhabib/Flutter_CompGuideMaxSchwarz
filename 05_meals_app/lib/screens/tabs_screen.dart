@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// we imported the filters_notifier here only because our 'enum Filter' identifier
 import 'package:meals_app/providers/filters_notifier.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
-// import 'package:meals_app/providers/meals_provider.dart';
-// import 'package:meals_app/models/meal_model.dart';
 import 'package:meals_app/screens/filters_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/screens/category_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
-// const kInitialFilters = {
-//   Filter.glutenFree: false,
-//   Filter.lactoseFree: false,
-//   Filter.vegetarian: false,
-//   Filter.vegan: false
-// };
+
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
@@ -26,31 +18,8 @@ class TabsScreen extends ConsumerStatefulWidget {
 }
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
-  // final List<MealModel> _favoriteMeals = [];
   int _selectedPageIndex = 0;
-  // final Map<Filter, bool> _selectedFilters = kInitialFilters;
-
-  // void _showInfoMessage(String message) {
-  //   ScaffoldMessenger.of(context).clearSnackBars();
-  //   ScaffoldMessenger.of(context)
-  //       .showSnackBar(SnackBar(content: Text(message)));
-  // }
-
-  // void _toggleFavorites(MealModel meal) {
-  //   final isExists = _favoriteMeals.contains(meal);
-
-  //   if (isExists) {
-  //     setState(() {
-  //       _favoriteMeals.remove(meal);
-  //     });
-  //     _showInfoMessage('The meal is no longer a favorite');
-  //   } else {
-  //     setState(() {
-  //       _favoriteMeals.add(meal);
-  //       _showInfoMessage('Marked as a favorite');
-  //     });
-  //   }
-  // }
+ 
 
   void _selectPage(int index) {
     setState(() {
@@ -61,30 +30,21 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   void _setScreen(String identifier) async {
     Navigator.pop(context);
     if (identifier == 'filters') {
-      // we need to wait for the user to return so we can get the result
-      // final result = await...
       await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
           builder: (ctx) => const FiltersScreen(
-              // currentFilters: _selectedFilters
               ),
         ),
       );
-      // setState(() {
-      //   _selectedFilters = result ?? kInitialFilters;
-      // });
+  
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // 'ref' property from riverpod is similar to the 'widget' from flutter which will allow us to listen (watch) to changes
-    // final meals = ref.watch(mealsProvider);
-    // final activeFilters = ref.watch(filtersNotifier);
     final availableMeals = ref.watch(filteredMealsProvider);
 
     Widget activePage = CategoryScreen(
-      // onToggleFavorites: _toggleFavorites,
       availableMeals: availableMeals,
     );
     String activePageTitle = 'Categories';
@@ -93,7 +53,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       final favoriteMeals = ref.watch(favoritesNotifier);
       activePage = MealsScreen(
         mealModel: favoriteMeals,
-        // onToggleFavorites: _toggleFavorites,
       );
       activePageTitle = 'Favorites';
     }

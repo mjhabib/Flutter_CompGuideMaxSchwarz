@@ -6,11 +6,9 @@ import 'package:meals_app/providers/favorites_notifier.dart';
 
 class MealDetailsScreen extends ConsumerWidget {
   final MealModel mealModel;
-  // final void Function(MealModel meal) onToggleFavorites;
   const MealDetailsScreen({
     super.key,
     required this.mealModel,
-    // required this.onToggleFavorites,
   });
 
   @override
@@ -24,7 +22,6 @@ class MealDetailsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // onToggleFavorites(mealModel);
               final wasAdded = ref
                   .read(favoritesNotifier.notifier)
                   .toggleFavoriteMeals(mealModel);
@@ -39,7 +36,6 @@ class MealDetailsScreen extends ConsumerWidget {
               );
             },
             icon: Icon(isFavorite ? Icons.star : Icons.star_border),
-            // icon: const Icon(Icons.star),
           ),
         ],
       ),
