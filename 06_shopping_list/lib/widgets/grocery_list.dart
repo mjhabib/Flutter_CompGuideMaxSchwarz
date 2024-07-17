@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/data/item_data.dart';
 import 'package:shopping_list/widgets/new_item.dart';
 
-class GroceryItem extends StatefulWidget {
-  const GroceryItem({super.key});
+class GroceryList extends StatefulWidget {
+  const GroceryList({super.key});
 
   @override
-  State<GroceryItem> createState() => _GroceryItemState();
+  State<GroceryList> createState() => _GroceryListState();
 }
 
-class _GroceryItemState extends State<GroceryItem> {
+class _GroceryListState extends State<GroceryList> {
   void _addItem() {
     Navigator.push(
       context,
