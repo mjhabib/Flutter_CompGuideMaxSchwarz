@@ -73,6 +73,26 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
+  void _removeItem(ItemModel item) async {
+    final index = _newItemData.indexOf(item);
+    setState(() {
+      _newItemData.remove(item);
+    });
+
+    final url = Uri.https(
+        'flutter-shopping-list-bd86e-default-rtdb.firebaseio.com',
+        'shopping-list/${item.id}.json');
+    final response = await http.delete(url);
+
+    // if something went wrong and we couldn't delete the item from db, we want to 'insert' the item to our list again with the same order as before, that's why we need the 'index' of that item here
+    if (response.statusCode >= 400) {
+      // optional: show an error message too...
+      setState(() {
+        _newItemData.insert(index, item);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(
@@ -89,9 +109,7 @@ class _GroceryListState extends State<GroceryList> {
         itemBuilder: (ctx, index) => Dismissible(
           key: ValueKey(_newItemData[index].id),
           onDismissed: (direction) {
-            setState(() {
-              _newItemData.remove(_newItemData[index]);
-            });
+            _removeItem(_newItemData[index]);
           },
           child: ListTile(
             title: Text(_newItemData[index].name),
