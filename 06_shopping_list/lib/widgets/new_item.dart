@@ -21,12 +21,16 @@ class _NewItemState extends State<NewItem> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categoryData[Categories.vegetables]!;
+  var _isSending = false;
 
   Future<void> _saveItem() async {
     // 'validate' here will trigger 'validator' functions defined in our form
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // 'save' here will trigger 'onSave' functions defined in our form
+      setState(() {
+        _isSending = true;
+      });
 
       // Firebase realtime database in test-mode
       // the path name below (shopping-list) can be anything
@@ -172,9 +176,20 @@ class _NewItemState extends State<NewItem> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: _resetItem, child: const Text('Reset')),
+                  TextButton(
+                    onPressed: _isSending ? null : _resetItem,
+                    child: const Text('Reset'),
+                  ),
                   ElevatedButton(
-                      onPressed: _saveItem, child: const Text('Add item'))
+                    onPressed: _isSending ? null : _saveItem,
+                    child: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Add item'),
+                  )
                 ],
               )
             ],
