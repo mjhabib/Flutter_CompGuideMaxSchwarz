@@ -37,6 +37,14 @@ class _GroceryListState extends State<GroceryList> {
       });
     }
 
+    // the firebase returns 'null' as string if there is no data in db
+    if (response.body == 'null') {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
     final Map<String, dynamic> results = json.decode(response.body);
 
     final List<ItemModel> loadedItems = [];
