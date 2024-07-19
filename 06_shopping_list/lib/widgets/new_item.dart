@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:shopping_list/data/category_data.dart';
 import 'package:shopping_list/models/category_model.dart';
@@ -25,14 +27,35 @@ class _NewItemState extends State<NewItem> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // 'save' here will trigger 'onSave' functions defined in our form
-      Navigator.pop(
-        context,
-        ItemModel(
-            id: DateTime.now().toString(),
-            name: _enteredName,
-            quantity: _enteredQuantity,
-            categoryModel: _selectedCategory),
+
+      // Firebase realtime database in test-mode
+      // the path name below (shopping-list) can be anything
+      final url = Uri.https(
+          'flutter-shopping-list-bd86e-default-rtdb.firebaseio.com',
+          'shopping-list.json');
+      // headers: key= headers identifier, value= settings for those headers
+      http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        // body: convert data to the json format
+        // we don't need to pass any id because firebase will generate it for us
+        body: json.encode(
+          {
+            'name': _enteredName,
+            'quantity': _enteredQuantity,
+            'categoryModel': _selectedCategory.name
+          },
+        ),
       );
+
+      // Navigator.pop(
+      //   context,
+      //   ItemModel(
+      //       id: DateTime.now().toString(),
+      //       name: _enteredName,
+      //       quantity: _enteredQuantity,
+      //       categoryModel: _selectedCategory),
+      // );
     }
   }
 
