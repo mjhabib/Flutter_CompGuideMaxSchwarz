@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:shopping_list/data/category_data.dart';
 import 'package:shopping_list/models/category_model.dart';
-import 'package:shopping_list/models/item_model.dart';
+// import 'package:shopping_list/models/item_model.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -22,7 +22,7 @@ class _NewItemState extends State<NewItem> {
   var _enteredQuantity = 1;
   var _selectedCategory = categoryData[Categories.vegetables]!;
 
-  void _saveItem() {
+  Future<void> _saveItem() async {
     // 'validate' here will trigger 'validator' functions defined in our form
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -34,7 +34,7 @@ class _NewItemState extends State<NewItem> {
           'flutter-shopping-list-bd86e-default-rtdb.firebaseio.com',
           'shopping-list.json');
       // headers: key= headers identifier, value= settings for those headers
-      http.post(
+      final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         // body: convert data to the json format
@@ -47,6 +47,16 @@ class _NewItemState extends State<NewItem> {
           },
         ),
       );
+      // ).then((response){
+      //   // alternative way to get a response from the post method
+      // });
+      response.body;
+
+      // this if statement makes sure our 'context' is still exist during the async/await operation because it is possible to do something in between that results in an outdated context!
+      if (!context.mounted) {
+        return;
+      }
+      Navigator.pop(context);
 
       // Navigator.pop(
       //   context,
