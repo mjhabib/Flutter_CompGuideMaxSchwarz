@@ -38,48 +38,53 @@ class _NewItemState extends State<NewItem> {
           'flutter-shopping-list-bd86e-default-rtdb.firebaseio.com',
           'shopping-list.json');
       // headers: key= headers identifier, value= settings for those headers
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        // body: convert data to the json format
-        // we don't need to pass any id because firebase will generate it for us
-        body: json.encode(
-          {
-            'name': _enteredName,
-            'quantity': _enteredQuantity,
-            'categoryModel': _selectedCategory.name
-          },
-        ),
-      );
-      // ).then((response){
-      //   // alternative way to get a response from the post method
-      // });
 
-      // this step is useful to prevent extra http requests to the server
-      final Map<String, dynamic> resData = json.decode(response.body);
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          // body: convert data to the json format
+          // we don't need to pass any id because firebase will generate it for us
+          body: json.encode(
+            {
+              'name': _enteredName,
+              'quantity': _enteredQuantity,
+              'categoryModel': _selectedCategory.name
+            },
+          ),
+        );
+        // ).then((response){
+        //   // alternative way to get a response from the post method
+        // });
 
-      // this if statement makes sure our 'context' is still exist during the async/await operation because it is possible to do something in between that results in an outdated context!
-      if (!context.mounted) {
-        return;
+        // this step is useful to prevent extra http requests to the server
+        final Map<String, dynamic> resData = json.decode(response.body);
+
+        // this if statement makes sure our 'context' is still exist during the async/await operation because it is possible to do something in between that results in an outdated context!
+        if (!context.mounted) {
+          return;
+        }
+
+        Navigator.pop(
+          context,
+          ItemModel(
+              id: resData['name'],
+              name: _enteredName,
+              quantity: _enteredQuantity,
+              categoryModel: _selectedCategory),
+
+          // Navigator.pop(
+          //   context,
+          //   ItemModel(
+          //       id: DateTime.now().toString(),
+          //       name: _enteredName,
+          //       quantity: _enteredQuantity,
+          //       categoryModel: _selectedCategory),
+          // );
+        );
+      } catch (e) {
+        // show an error on screen!
       }
-
-      Navigator.pop(
-        context,
-        ItemModel(
-            id: resData['name'],
-            name: _enteredName,
-            quantity: _enteredQuantity,
-            categoryModel: _selectedCategory),
-      );
-
-      // Navigator.pop(
-      //   context,
-      //   ItemModel(
-      //       id: DateTime.now().toString(),
-      //       name: _enteredName,
-      //       quantity: _enteredQuantity,
-      //       categoryModel: _selectedCategory),
-      // );
     }
   }
 

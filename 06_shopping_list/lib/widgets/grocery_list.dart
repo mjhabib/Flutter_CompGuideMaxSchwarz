@@ -29,41 +29,47 @@ class _GroceryListState extends State<GroceryList> {
     final url = Uri.https(
         'flutter-shopping-list-bd86e-default-rtdb.firebaseio.com',
         'shopping-list.json');
-    final response = await http.get(url);
 
-    if (response.statusCode >= 400) {
-      setState(() {
-        _error = 'Failed to fetch data, please try again later!';
-      });
-    }
+    try {
+      final response = await http.get(url);
+      if (response.statusCode >= 400) {
+        setState(() {
+          _error = 'Failed to fetch data, please try again later!';
+        });
+      }
 
-    // the firebase returns 'null' as string if there is no data in db
-    if (response.body == 'null') {
+      // the firebase returns 'null' as string if there is no data in db
+      if (response.body == 'null') {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final Map<String, dynamic> results = json.decode(response.body);
+
+      final List<ItemModel> loadedItems = [];
+      for (final item in results.entries) {
+        // because we only stored the category title in our db, we need to match it with our categoryData to get the full enum category data
+        final category = categoryData.entries
+            .firstWhere(
+                (catItem) => catItem.value.name == item.value['categoryModel'])
+            .value;
+        loadedItems.add(ItemModel(
+            id: item.key,
+            name: item.value['name'],
+            quantity: item.value['quantity'],
+            categoryModel: category));
+      }
       setState(() {
+        _newItemData = loadedItems;
         _isLoading = false;
       });
-      return;
+    } catch (e) {
+      setState(() {
+        _error = 'Something went wrong! please try again later.';
+      });
     }
-
-    final Map<String, dynamic> results = json.decode(response.body);
-
-    final List<ItemModel> loadedItems = [];
-    for (final item in results.entries) {
-      // because we only stored the category title in our db, we need to match it with our categoryData to get the full enum category data
-      final category = categoryData.entries
-          .firstWhere(
-              (catItem) => catItem.value.name == item.value['categoryModel'])
-          .value;
-      loadedItems.add(ItemModel(
-          id: item.key,
-          name: item.value['name'],
-          quantity: item.value['quantity'],
-          categoryModel: category));
-    }
-    setState(() {
-      _newItemData = loadedItems;
-      _isLoading = false;
-    });
   }
 
   void _addItem() async {
