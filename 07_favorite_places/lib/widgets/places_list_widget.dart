@@ -15,7 +15,7 @@ class PlacesListWidget extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
-              .copyWith(color: Theme.of(context).colorScheme.surface),
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
       );
     }
@@ -28,7 +28,7 @@ class PlacesListWidget extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .titleMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.surface),
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
           );
         });

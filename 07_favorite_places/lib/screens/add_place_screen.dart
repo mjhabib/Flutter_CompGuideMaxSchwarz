@@ -1,15 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:favorite_places/providers/user_places_notifier.dart';
 
-class AddPlaceScreen extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  State<AddPlaceScreen> createState() => _AddPlaceScreenState();
+  ConsumerState<AddPlaceScreen> createState() => _AddPlaceScreenState();
 }
 
-class _AddPlaceScreenState extends State<AddPlaceScreen> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   String _enteredTitle = '';
+
+  void _savePlace() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      ref.read(userPlacesNotifier.notifier).addPlace(_enteredTitle);
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +38,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                   maxLength: 50,
                   decoration: const InputDecoration(labelText: 'Title'),
                   style:
-                      TextStyle(color: Theme.of(context).colorScheme.surface),
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -43,12 +54,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      Navigator.pop(context, _enteredTitle);
-                    }
-                  },
+                  onPressed: _savePlace,
                   label: const Text('Add Place'),
                   icon: const Icon(Icons.add),
                 )
