@@ -1,4 +1,5 @@
 import 'package:favorite_places/models/place_model.dart';
+import 'package:favorite_places/screens/place_detail_screen.dart';
 
 import 'package:flutter/material.dart';
 
@@ -20,17 +21,26 @@ class PlacesListWidget extends StatelessWidget {
       );
     }
     return ListView.builder(
-        itemCount: places.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              places[index].title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
-            ),
-          );
-        });
+      itemCount: places.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(
+            places[index].title,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => PlaceDetailScreen(place: places[index]),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
