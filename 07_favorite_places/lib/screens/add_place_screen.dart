@@ -14,11 +14,14 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   String _enteredTitle = '';
+  String? _selectedImage;
 
   void _savePlace() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() || _selectedImage == null) {
       _formKey.currentState!.save();
-      ref.read(userPlacesNotifier.notifier).addPlace(_enteredTitle);
+      ref
+          .read(userPlacesNotifier.notifier)
+          .addPlace(_enteredTitle, _selectedImage!);
       Navigator.pop(context);
     }
   }
@@ -54,7 +57,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                const ImageInputWidget(),
+                ImageInputWidget(onPickImage: (image) {
+                  _selectedImage = image;
+                }),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: _savePlace,

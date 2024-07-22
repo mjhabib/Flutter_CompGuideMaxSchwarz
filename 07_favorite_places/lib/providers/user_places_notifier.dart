@@ -7,8 +7,8 @@ class UserPlacesNotifier extends StateNotifier<List<PlaceModel>> {
       : super(
             const []); // this list must not be mutated, that's why it's a 'const'
 
-  void addPlace(String title) {
-    final newPlace = PlaceModel(title: title);
+  void addPlace(String title, String imageNetwork) {
+    final newPlace = PlaceModel(title: title, imageNetwork: imageNetwork);
     state = [newPlace, ...state];
   }
 }

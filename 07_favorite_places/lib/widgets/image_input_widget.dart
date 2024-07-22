@@ -1,17 +1,18 @@
-import 'dart:io';
+// import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInputWidget extends StatefulWidget {
-  const ImageInputWidget({super.key});
+  final void Function(String image) onPickImage;
+  const ImageInputWidget({super.key, required this.onPickImage});
 
   @override
   State<ImageInputWidget> createState() => _ImageInputWidgetState();
 }
 
 class _ImageInputWidgetState extends State<ImageInputWidget> {
-  File? _selectedImageFile;
+  // File? _selectedImageFile;
   String? _selectedImageNetwork;
 
   Future<void> _takePicture() async {
@@ -25,9 +26,11 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
     }
 
     setState(() {
-      _selectedImageFile = File(pickedImage.path); // Convert XFile to File
+      // _selectedImageFile = File(pickedImage.path); // Convert XFile to File
       _selectedImageNetwork = pickedImage.path;
     });
+
+    widget.onPickImage(_selectedImageNetwork!);
   }
 
   @override
@@ -47,13 +50,13 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
       );
     }
     // for testing on an Android/IOS platform
-    if (_selectedImageFile != null && !kIsWeb) {
-      content = GestureDetector(
-        onTap: _takePicture,
-        child: Image.file(_selectedImageFile!,
-            fit: BoxFit.cover, height: double.infinity, width: double.infinity),
-      );
-    }
+    // if (_selectedImageFile != null && !kIsWeb) {
+    //   content = GestureDetector(
+    //     onTap: _takePicture,
+    //     child: Image.file(_selectedImageFile!,
+    //         fit: BoxFit.cover, height: double.infinity, width: double.infinity),
+    //   );
+    // }
 
     return Container(
       height: 250,
