@@ -35,6 +35,13 @@ class PlacesListWidget extends StatelessWidget {
                 .titleMedium!
                 .copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
+          subtitle: Text(
+            'I am a fake address...',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
           onTap: () {
             Navigator.push(
               context,

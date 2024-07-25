@@ -3,6 +3,18 @@ import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
+// class PlaceLocationModel {
+//   final double latitude;
+//   final double longitude;
+//   final String address;
+
+//   const PlaceLocationModel({
+//     required this.latitude,
+//     required this.longitude,
+//     required this.address,
+//   });
+// }
+
 class PlaceModel {
   final String id;
   final String title;

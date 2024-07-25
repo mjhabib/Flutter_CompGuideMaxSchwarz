@@ -1,5 +1,9 @@
+// import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+// import 'package:http/http.dart' as http;
+
+// import 'package:favorite_places/models/place_model.dart';
 
 class LocationInputWidget extends StatefulWidget {
   const LocationInputWidget({super.key});
@@ -9,8 +13,8 @@ class LocationInputWidget extends StatefulWidget {
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
-  late Location _pickedLocation;
-  var _isGettingLocation = false;
+  // var _isGettingLocation = false;
+  // PlaceLocationModel? _pickedLocation;
 
 // Note: Did not work on Chrome browser but did work on Android
   void _getCurrentLocation() async {
@@ -18,7 +22,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     bool serviceEnabled;
     PermissionStatus permissionGranted;
-    LocationData locationData;
+    // LocationData locationData;
 
     serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
@@ -36,31 +40,53 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       }
     }
 
-    setState(() {
-      _isGettingLocation = true;
-    });
+    // setState(() {
+    //   _isGettingLocation = true;
+    // });
 
-    locationData = await location.getLocation();
+    // locationData = await location.getLocation();
+    // final lat = locationData.latitude;
+    // final lng = locationData.longitude;
 
-    setState(() {
-      _isGettingLocation = false;
-    });
+    // if (lat == null || lng == null) {
+    //   // Optional: show an error here
+    //   return;
+    // }
+
+    // Important note: getting a google API Key is not possible for me at the moment, because I'm banned and need to add a billing method. So I can't test this feature right now!
+    // const apiKey = 'fake_key';
+    // final url = Uri.parse(
+    //     "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey");
+    // final response = await http.get(url);
+    // final resData = json.decode(response.body);
+    // final address = resData['results'][0]['formatted_address'];
+
+    // setState(() {
+    // _pickedLocation = const PlaceLocationModel(
+    //   latitude: lat,
+    //   longitude: lng,
+    //   address: address,
+    // );
+    //   _isGettingLocation = false;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget previewContent = Text(
-      'No location chosen',
-      textAlign: TextAlign.center,
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge!
-          .copyWith(color: Theme.of(context).colorScheme.onSurface),
-    );
+    Widget previewContent = Image.asset('images/google_maps.jpg');
 
-    if (_isGettingLocation) {
-      previewContent = const CircularProgressIndicator();
-    }
+    // Widget previewContent = Text(
+    //   'No location chosen',
+    //   textAlign: TextAlign.center,
+    //   style: Theme.of(context)
+    //       .textTheme
+    //       .bodyLarge!
+    //       .copyWith(color: Theme.of(context).colorScheme.onSurface),
+    // );
+
+    // if (_isGettingLocation) {
+    //   previewContent = const CircularProgressIndicator();
+    // }
 
     return Column(
       children: [
@@ -81,7 +107,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             TextButton.icon(
               label: const Text('Get current location'),
               icon: const Icon(Icons.location_on),
-              onPressed: _getCurrentLocation,
+              onPressed: () {},
             ),
             TextButton.icon(
               label: const Text('Select on map'),
