@@ -41,3 +41,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Personal
+08_chat_app/lib/firebase_options.dart
+08_chat_app/android/app/google-services.json
