@@ -1,4 +1,5 @@
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,29 +17,44 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPass = '';
+  String? _selectedImage;
 
   Future<void> _submit() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    final isValid = _formKey.currentState!.validate();
 
-      try {
-        if (_isLogin) {
-          // log user in
-          final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-              email: _enteredEmail, password: _enteredPass);
-        } else {
-          // register user
+    if (!isValid || !_isLogin && _selectedImage == null) {
+      // Optional: show an error message
+      return;
+    }
 
-          final userCredential =
-              await _firebaseAuth.createUserWithEmailAndPassword(
-                  email: _enteredEmail, password: _enteredPass);
-        }
-      } on FirebaseAuthException catch (error) {
-        // "on ... catch" only catches error types specified in between
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.message ?? 'Authentication failed!')));
+    _formKey.currentState!.save();
+
+    try {
+      if (_isLogin) {
+        // log user in
+        final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPass);
+      } else {
+        // register user
+        final userCredential =
+            await _firebaseAuth.createUserWithEmailAndPassword(
+                email: _enteredEmail, password: _enteredPass);
+
+        // upload user's image
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${userCredential.user!.uid}.jpg');
+
+        await storageRef.putString(_selectedImage!);
+        final imageUrl = await storageRef.getDownloadURL();
+        print(imageUrl);
       }
+    } on FirebaseAuthException catch (error) {
+      // "on ... catch" only catches error types specified in between
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Authentication failed!')));
     }
   }
 
@@ -67,7 +83,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (!_isLogin) const UserImagePicker(),
+                          if (!_isLogin)
+                            UserImagePicker(
+                              onPickImage: (pickedImage) {
+                                _selectedImage = pickedImage;
+                              },
+                            ),
                           TextFormField(
                             decoration: const InputDecoration(
                                 labelText: 'Email Address'),
