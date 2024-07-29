@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final _fireStore = FirebaseFirestore.instance;
 
 class NewMessage extends StatefulWidget {
   const NewMessage({super.key});
@@ -16,16 +20,29 @@ class _NewMessageState extends State<NewMessage> {
     super.dispose();
   }
 
-  void _submitMessage() {
+  Future<void> _submitMessage() async {
     final enteredMessage = _messageController.text;
 
     if (enteredMessage.trim().isEmpty) {
       return;
     }
 
-    // send to Firebase
-
+    // close keyboard & clear text message
+    FocusScope.of(context).unfocus();
     _messageController.clear();
+
+    // Notice: this solution for retrieving data is not ideal because by sending each message, we also send a request to the server to get user's data (which we only need one time!)
+    final user = FirebaseAuth.instance.currentUser!;
+    final userData = await _fireStore.collection('users').doc(user.uid).get();
+
+    // Storing data
+    _fireStore.collection('chat').add({
+      'text': enteredMessage,
+      'createdAt': Timestamp.now(),
+      'userId': user.uid,
+      'username': userData.data()!['username'],
+      'userImage': userData.data()!['image_url'],
+    });
   }
 
   @override
