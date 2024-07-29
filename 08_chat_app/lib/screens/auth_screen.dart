@@ -1,4 +1,5 @@
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,6 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 email: _enteredEmail, password: _enteredPass);
 
         // upload user's image
+        // Rules: allow read, write: if request.auth != null;
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('user_image')
@@ -53,7 +55,18 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await storageRef.putString(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
-        print(imageUrl);
+
+        // store users's image_url & username
+        // Rules: allow read, write: if request.auth != null;
+        await FirebaseFirestore.instance
+            .collection('users') // folder name
+            .doc(userCredential.user!.uid) // data name
+            .set({
+          // data itself
+          'username': 'later...',
+          'email': _enteredEmail,
+          'image_url': imageUrl,
+        });
       }
     } on FirebaseAuthException catch (error) {
       // "on ... catch" only catches error types specified in between
