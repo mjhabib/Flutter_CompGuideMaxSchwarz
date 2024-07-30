@@ -5,7 +5,7 @@ class MessageBubble extends StatelessWidget {
   // Create a message bubble which is meant to be the first in the sequence.
   const MessageBubble.first({
     super.key,
-    required this.userImage,
+    this.userImage,
     required this.username,
     required this.message,
     required this.isMe,

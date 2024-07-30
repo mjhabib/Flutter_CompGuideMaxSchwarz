@@ -28,7 +28,7 @@ class _NewMessageState extends State<NewMessage> {
     }
 
     // close keyboard & clear text message
-    FocusScope.of(context).unfocus();
+    // FocusScope.of(context).unfocus();
     _messageController.clear();
 
     // Notice: this solution for retrieving data is not ideal because by sending each message, we also send a request to the server to get user's data (which we only need one time!)
@@ -55,6 +55,7 @@ class _NewMessageState extends State<NewMessage> {
             child: TextField(
               controller: _messageController,
               textCapitalization: TextCapitalization.sentences,
+              autofocus: true,
               autocorrect: true,
               enableSuggestions: true,
               decoration:
